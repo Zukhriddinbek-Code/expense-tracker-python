@@ -3,15 +3,16 @@ from expense import Expense
 
 def main():
   print(f'🎯 Running Expense Tracker')
+  expense_file_path = 'expenses.csv'
 
   # get user input for expense
   expense = get_user_expense()
 
   # write the expense to a file
-  save_expense_to_file()
+  save_expense_to_file(expense, expense_file_path)
 
   # read file and summarize all the expense 
-  summarize_expenses()
+  summarize_expenses(expense_file_path)
 
 
 
@@ -29,7 +30,7 @@ def get_user_expense():
 
     value_range = f'[1 - {len(expense_categories)}]'
     selected_index = int(input(f'Enter a category number {value_range}: ')) - 1
-    
+
     if selected_index in range(len(expense_categories)):
       selected_category = expense_categories[selected_index]
       new_expense = Expense(name=expense_name, category=selected_category, amount=expense_amount)
@@ -38,9 +39,11 @@ def get_user_expense():
       print(f'Invalid category selected. Please try again!')
 
 
-
-def save_expense_to_file():
-  print(f'🎯 Saving Expense to File')
+#type hint for editor to know what is inside Expense class and suggest its constructors
+def save_expense_to_file(expense: Expense, expense_file_path):
+  print(f'🎯 Saving Expense to File: {expense} to {expense_file_path}')
+  with open(expense_file_path, 'a') as f:
+    f.write(f'{expense.name}, {expense.amount}, {expense.category}\n')
 
 
 def summarize_expenses():

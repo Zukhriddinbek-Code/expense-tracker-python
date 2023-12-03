@@ -6,10 +6,10 @@ def main():
   expense_file_path = 'expenses.csv'
 
   # get user input for expense
-  expense = get_user_expense()
+  # expense = get_user_expense()
 
   # write the expense to a file
-  save_expense_to_file(expense, expense_file_path)
+  # save_expense_to_file(expense, expense_file_path)
 
   # read file and summarize all the expense 
   summarize_expenses(expense_file_path)
@@ -46,9 +46,27 @@ def save_expense_to_file(expense: Expense, expense_file_path):
     f.write(f'{expense.name}, {expense.amount}, {expense.category}\n')
 
 
-def summarize_expenses():
+def summarize_expenses(expense_file_path):
   print(f'🎯 Summarize Expenses')
-
+  expenses: list[Expense] = [] #expense is Expense object type hint
+  with open(expense_file_path, 'r') as f:
+    lines = f.readlines()
+    for line in lines:
+      #strip returns a string leading and trailing whitespace removed
+      expense_name, expense_amount, expense_category = line.strip().split(',') #destructure right away
+      line_expense = Expense(name=expense_name, category=expense_category, amount=float(expense_amount))
+      expenses.append(line_expense)
+  
+  amount_by_category = {}
+  for expense in expenses:
+    key = expense.category
+    if key in amount_by_category:
+      amount_by_category[key] += expense.amount
+    else: 
+      amount_by_category[key] = expense.amount
+  print('Expenses By Category 📈')
+  for key, amount in amount_by_category.items():
+    print(f'   {key}: ${amount:.2f} ')
 
 #when we run this as a file, below condition will be true
 if __name__ == '__main__':
